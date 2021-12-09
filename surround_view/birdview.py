@@ -8,10 +8,10 @@ from .imagebuffer import Buffer
 from . import param_settings as settings
 from .param_settings import xl, xr, yt, yb
 from . import utils
+from typing import Tuple, List
 
 
 class ProjectedImageBuffer(object):
-
     """
     Class for synchronizing processing threads from different cameras.
     """
@@ -140,7 +140,7 @@ class BirdView(BaseThread):
         return self.buffer.get()
 
     def update_frames(self, images):
-        self.frames = images
+        self.frames: List[np.ndarray] = images
 
     def load_weights_and_masks(self, weights_image, masks_image):
         GMat = np.asarray(Image.open(weights_image).convert("RGBA"), dtype=np.float) / 255.0
@@ -238,13 +238,13 @@ class BirdView(BaseThread):
         d2 = utils.mean_luminance_ratio(FI(Fg), LI(Lg), m1)
         d3 = utils.mean_luminance_ratio(FI(Fr), LI(Lr), m1)
 
-        t1 = (a1 * b1 * c1 * d1)**0.25
-        t2 = (a2 * b2 * c2 * d2)**0.25
-        t3 = (a3 * b3 * c3 * d3)**0.25
+        t1 = (a1 * b1 * c1 * d1) ** 0.25
+        t2 = (a2 * b2 * c2 * d2) ** 0.25
+        t3 = (a3 * b3 * c3 * d3) ** 0.25
 
-        x1 = t1 / (d1 / a1)**0.5
-        x2 = t2 / (d2 / a2)**0.5
-        x3 = t3 / (d3 / a3)**0.5
+        x1 = t1 / (d1 / a1) ** 0.5
+        x2 = t2 / (d2 / a2) ** 0.5
+        x3 = t3 / (d3 / a3) ** 0.5
 
         x1 = tune(x1)
         x2 = tune(x2)
@@ -254,9 +254,9 @@ class BirdView(BaseThread):
         Fg = utils.adjust_luminance(Fg, x2)
         Fr = utils.adjust_luminance(Fr, x3)
 
-        y1 = t1 / (b1 / c1)**0.5
-        y2 = t2 / (b2 / c2)**0.5
-        y3 = t3 / (b3 / c3)**0.5
+        y1 = t1 / (b1 / c1) ** 0.5
+        y2 = t2 / (b2 / c2) ** 0.5
+        y3 = t3 / (b3 / c3) ** 0.5
 
         y1 = tune(y1)
         y2 = tune(y2)
@@ -266,9 +266,9 @@ class BirdView(BaseThread):
         Bg = utils.adjust_luminance(Bg, y2)
         Br = utils.adjust_luminance(Br, y3)
 
-        z1 = t1 / (c1 / d1)**0.5
-        z2 = t2 / (c2 / d2)**0.5
-        z3 = t3 / (c3 / d3)**0.5
+        z1 = t1 / (c1 / d1) ** 0.5
+        z2 = t2 / (c2 / d2) ** 0.5
+        z3 = t3 / (c3 / d3) ** 0.5
 
         z1 = tune(z1)
         z2 = tune(z2)
@@ -278,9 +278,9 @@ class BirdView(BaseThread):
         Lg = utils.adjust_luminance(Lg, z2)
         Lr = utils.adjust_luminance(Lr, z3)
 
-        w1 = t1 / (a1 / b1)**0.5
-        w2 = t2 / (a2 / b2)**0.5
-        w3 = t3 / (a3 / b3)**0.5
+        w1 = t1 / (a1 / b1) ** 0.5
+        w2 = t2 / (a2 / b2) ** 0.5
+        w3 = t3 / (a3 / b3) ** 0.5
 
         w1 = tune(w1)
         w2 = tune(w2)

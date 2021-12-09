@@ -11,7 +11,7 @@ from surround_view import FisheyeCameraModel, PointSelector, display_image
 import surround_view.param_settings as settings
 
 
-def get_projection_map(camera_model, image):
+def get_projection_map(camera_model: FisheyeCameraModel, image: np.ndarray):
     und_image = camera_model.undistort(image)
     name = camera_model.camera_name
     gui = PointSelector(und_image, title=name)
@@ -35,7 +35,7 @@ def get_projection_map(camera_model, image):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-camera", required=True,
-                        choices=["front", "back", "left", "right"],
+                        choices=settings.camera_names,
                         help="The camera view to be projected")
     parser.add_argument("-scale", nargs="+", default=None,
                         help="scale the undistorted image")

@@ -1,8 +1,8 @@
 import os
 import cv2
 
-
-camera_names = ["front", "back", "left", "right"]
+camera_names = ["front", "back", "left", "right",
+                "1", "2", "3", "4", "5", "6"]
 
 # --------------------------------------------------------------------
 # (shift_width, shift_height): how far away the birdview looks outside
@@ -29,9 +29,10 @@ yb = total_h - yt
 
 project_shapes = {
     "front": (total_w, yt),
-    "back":  (total_w, yt),
-    "left":  (total_h, xl),
-    "right": (total_h, xl)
+    "back": (total_w, yt),
+    "left": (total_h, xl),
+    "right": (total_h, xl),
+    "1": (total_w, yt),
 }
 
 # pixel locations of the four points to be chosen.
@@ -43,20 +44,24 @@ project_keypoints = {
               (shift_w + 120, shift_h + 160),
               (shift_w + 480, shift_h + 160)],
 
-    "back":  [(shift_w + 120, shift_h),
-              (shift_w + 480, shift_h),
-              (shift_w + 120, shift_h + 160),
-              (shift_w + 480, shift_h + 160)],
+    "back": [(shift_w + 120, shift_h),
+             (shift_w + 480, shift_h),
+             (shift_w + 120, shift_h + 160),
+             (shift_w + 480, shift_h + 160)],
 
-    "left":  [(shift_h + 280, shift_w),
-              (shift_h + 840, shift_w),
-              (shift_h + 280, shift_w + 160),
-              (shift_h + 840, shift_w + 160)],
+    "left": [(shift_h + 280, shift_w),
+             (shift_h + 840, shift_w),
+             (shift_h + 280, shift_w + 160),
+             (shift_h + 840, shift_w + 160)],
 
     "right": [(shift_h + 160, shift_w),
               (shift_h + 720, shift_w),
               (shift_h + 160, shift_w + 160),
-              (shift_h + 720, shift_w + 160)]
+              (shift_h + 720, shift_w + 160)],
+    "1": [(shift_w + 120, shift_h),
+              (shift_w + 480, shift_h),
+              (shift_w + 120, shift_h + 160),
+              (shift_w + 480, shift_h + 160)],
 }
 
 car_image = cv2.imread(os.path.join(os.getcwd(), "images", "car.png"))

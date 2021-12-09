@@ -6,7 +6,6 @@ from . import param_settings as settings
 
 
 class FisheyeCameraModel(object):
-
     """
     Fisheye camera model, for undistorting, projecting and flipping camera frames.
     """
@@ -72,7 +71,8 @@ class FisheyeCameraModel(object):
         self.update_undistort_maps()
         return self
 
-    def undistort(self, image):
+    # 鱼眼去畸变
+    def undistort(self, image: np.ndarray) -> np.ndarray:
         result = cv2.remap(image, *self.undistort_maps, interpolation=cv2.INTER_LINEAR,
                            borderMode=cv2.BORDER_CONSTANT)
         return result
@@ -91,8 +91,10 @@ class FisheyeCameraModel(object):
         elif self.camera_name == "left":
             return cv2.transpose(image)[::-1]
 
-        else:
+        elif self.camera_name == "right":
             return np.flip(cv2.transpose(image), 1)
+        else:
+            return image.copy()
 
     def save_data(self):
         fs = cv2.FileStorage(self.camera_file, cv2.FILE_STORAGE_WRITE)

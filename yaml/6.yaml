@@ -1,0 +1,19 @@
+%YAML:1.0
+---
+resolution: !!opencv-matrix
+   rows: 2
+   cols: 1
+   dt: i
+   data: [ 1280, 720 ]
+camera_matrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 4.2888219819534788e+02, 0., 6.2722435256953213e+02, 0.,
+       4.2906377075025478e+02, 3.0835872546258474e+02, 0., 0., 1. ]
+dist_coeffs: !!opencv-matrix
+   rows: 4
+   cols: 1
+   dt: d
+   data: [ 2.9717950605622823e-01, 9.9249838819619338e-02,
+       -1.1358542756963176e-01, 3.2520514707072477e-02 ]

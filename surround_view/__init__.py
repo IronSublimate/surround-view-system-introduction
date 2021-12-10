@@ -1,4 +1,5 @@
 from .fisheye_camera import FisheyeCameraModel
+from .fisheye_camera6 import FisheyeCameraModel6
 from .imagebuffer import MultiBufferManager
 from .capture_thread import CaptureThread
 from .process_thread import CameraProcessingThread

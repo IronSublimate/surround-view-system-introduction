@@ -2,7 +2,7 @@ import os
 import numpy as np
 import cv2
 from PIL import Image
-from surround_view import FisheyeCameraModel, display_image, BirdView
+from surround_view import FisheyeCameraModel6, display_image, BirdView
 import surround_view.param_settings as settings
 
 
@@ -10,7 +10,7 @@ def main():
     names = settings.camera_names
     images = [os.path.join(os.getcwd(), "images", name + ".png") for name in names]
     yamls = [os.path.join(os.getcwd(), "yaml", name + ".yaml") for name in names]
-    camera_models = [FisheyeCameraModel(camera_file, camera_name) for camera_file, camera_name in zip(yamls, names)]
+    camera_models = [FisheyeCameraModel6(camera_file, camera_name) for camera_file, camera_name in zip(yamls, names)]
 
     projected = []
     for image_file, camera in zip(images, camera_models):

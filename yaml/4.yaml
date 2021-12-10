@@ -1,10 +1,5 @@
 %YAML:1.0
 ---
-resolution: !!opencv-matrix
-   rows: 2
-   cols: 1
-   dt: i
-   data: [ 1280, 720 ]
 camera_matrix: !!opencv-matrix
    rows: 3
    cols: 3
@@ -17,3 +12,26 @@ dist_coeffs: !!opencv-matrix
    dt: d
    data: [ 3.0470288959606062e-01, 8.0778556547933658e-02,
        -9.7494924232846059e-02, 2.6761495746718284e-02 ]
+resolution: !!opencv-matrix
+   rows: 2
+   cols: 1
+   dt: i
+   data: [ 1280, 720 ]
+project_matrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 6.5859804632326382e+00, -2.6232955293974506e+01,
+       6.1326572183341386e+03, 7.0328994402680112e-01,
+       -2.4813510499060602e+01, 1.2067450875063805e+04,
+       5.1129363622696303e-05, -2.5957146808617995e-03, 1. ]
+scale_xy: !!opencv-matrix
+   rows: 2
+   cols: 1
+   dt: f
+   data: [ 1., 1. ]
+shift_xy: !!opencv-matrix
+   rows: 2
+   cols: 1
+   dt: f
+   data: [ 0., 0. ]

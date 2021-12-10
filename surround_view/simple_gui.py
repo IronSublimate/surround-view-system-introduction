@@ -1,8 +1,10 @@
 import cv2
 import numpy as np
 
+
 # return -1 if user press 'q'. return 1 if user press 'Enter'.
 def display_image(window_title, image):
+    cv2.namedWindow(window_title, cv2.WINDOW_NORMAL)
     cv2.imshow(window_title, image)
     while True:
         click = cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE)
@@ -19,7 +21,6 @@ def display_image(window_title, image):
 
 
 class PointSelector(object):
-
     """
     ---------------------------------------------------
     | A simple gui point selector.                    |

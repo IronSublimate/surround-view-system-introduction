@@ -1,8 +1,8 @@
 import os
 import cv2
 
-camera_names = ["front", "back", "left", "right",
-                "1", "2", "3", "4", "5", "6"]
+camera_names = ["front", "back", "left", "right"]
+# camera_names = ["1", "2", "3", "4", "5", "6"]
 
 # --------------------------------------------------------------------
 # (shift_width, shift_height): how far away the birdview looks outside
@@ -59,9 +59,9 @@ project_keypoints = {
               (shift_h + 160, shift_w + 160),
               (shift_h + 720, shift_w + 160)],
     "1": [(shift_w + 120, shift_h),
-              (shift_w + 480, shift_h),
-              (shift_w + 120, shift_h + 160),
-              (shift_w + 480, shift_h + 160)],
+          (shift_w + 480, shift_h),
+          (shift_w + 120, shift_h + 160),
+          (shift_w + 480, shift_h + 160)],
 }
 
 car_image = cv2.imread(os.path.join(os.getcwd(), "images", "car.png"))

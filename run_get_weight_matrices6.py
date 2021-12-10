@@ -2,8 +2,8 @@ import os
 import numpy as np
 import cv2
 from PIL import Image
-from surround_view import FisheyeCameraModel6, display_image, BirdView
-import surround_view.param_settings as settings
+from surround_view import FisheyeCameraModel6, display_image, BirdView6
+import surround_view.param_settings6 as settings
 
 
 def main():
@@ -15,16 +15,17 @@ def main():
     projected = []
     for image_file, camera in zip(images, camera_models):
         img = cv2.imread(image_file)
+        img[:img.shape[0] // 2, :, :] = 0
         img = camera.undistort(img)
         img = camera.project(img)
-        img = camera.flip(img)
+        # img = camera.flip(img)
         projected.append(img)
 
-    birdview = BirdView()
+    birdview = BirdView6()
     Gmat, Mmat = birdview.get_weights_and_masks(projected)
     birdview.update_frames(projected)
-    birdview.make_luminance_balance().stitch_all_parts()
-    birdview.make_white_balance()
+    # birdview.make_luminance_balance().stitch_all_parts()
+    # birdview.make_white_balance()
     # birdview.copy_car_image()
     ret = display_image("BirdView Result", birdview.image)
     if ret > 0:

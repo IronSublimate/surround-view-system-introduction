@@ -5,3 +5,4 @@ from .capture_thread import CaptureThread
 from .process_thread import CameraProcessingThread
 from .simple_gui import display_image, PointSelector
 from .birdview import BirdView, ProjectedImageBuffer
+from .birdview6 import BirdView6

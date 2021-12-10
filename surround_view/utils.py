@@ -22,8 +22,8 @@ def gstreamer_pipeline(cam_id=0,
                capture_height,
                framerate,
                flip_method
+               )
             )
-    )
 
 
 def convert_binary_to_bool(mask):
@@ -94,7 +94,7 @@ def get_outmost_polygon_boundary(img):
     return polygon
 
 
-def get_weight_mask_matrix(imA, imB, dist_threshold=5):
+def get_weight_mask_matrix(imA: np.ndarray, imB: np.ndarray, dist_threshold=5) -> (np.ndarray, np.ndarray):
     """
     Get the weight matrix G that combines two images imA, imB smoothly.
     """

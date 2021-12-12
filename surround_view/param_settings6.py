@@ -50,8 +50,9 @@ project_keypoints = {
           np.array((-8250, +2700), dtype=np.int) + total // 2,
           np.array((-2870, +2700), dtype=np.int) + total // 2, ],
 }
+ratio = 0.05
 
-# car_image = cv2.imread(os.path.join(os.getcwd(), "images", "car.png"))
+car_image = cv2.imread(os.path.join(os.getcwd(), "images", "car.png"))
 # car_image = cv2.resize(car_image, (xr - xl, yb - yt))
 
 if __name__ == '__main__':

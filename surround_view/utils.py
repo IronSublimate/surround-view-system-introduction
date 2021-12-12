@@ -73,7 +73,7 @@ def get_overlap_region_mask(imA, imB):
     return mask
 
 
-def get_outmost_polygon_boundary(img):
+def get_outmost_polygon_boundary(img: np.ndarray) -> np.ndarray:
     """
     Given a mask image with the mask describes the overlapping region of
     two images, get the outmost contour of this region.
@@ -91,14 +91,19 @@ def get_outmost_polygon_boundary(img):
     # polygon approximation
     polygon = cv2.approxPolyDP(C, 0.009 * cv2.arcLength(C, True), True)
 
-    return polygon
+    # p_new = []
+    # for p in polygon:
+    #     l = [np.uint32(p[0][0]).item(), np.uint32(p[0][1]).item()], p[1], p[2], p[3]
+    return polygon.reshape((-1, 2))
 
 
-def get_weight_mask_matrix(imA: np.ndarray, imB: np.ndarray, dist_threshold=5) -> (np.ndarray, np.ndarray):
+def get_weight_mask_matrix(imA: np.ndarray, imB: np.ndarray, dist_threshold=5, resize=0.025) -> (np.ndarray, np.ndarray):
     """
     Get the weight matrix G that combines two images imA, imB smoothly.
     """
-    overlapMask = get_overlap_region_mask(imA, imB)
+    # imA = cv2.resize(imA, (-1, -1), fx=resize, fy=resize, interpolation=cv2.INTER_NEAREST)
+    # imB = cv2.resize(imB, (-1, -1), fx=resize, fy=resize, interpolation=cv2.INTER_NEAREST)
+    overlapMask = get_overlap_region_mask(imA,imB)
     overlapMaskInv = cv2.bitwise_not(overlapMask)
     indices = np.where(overlapMask == 255)
 
@@ -117,7 +122,8 @@ def get_weight_mask_matrix(imA: np.ndarray, imB: np.ndarray, dist_threshold=5) -
             distToB *= distToB
             distToA *= distToA
             G[y, x] = distToB / (distToA + distToB)
-
+    # G = cv2.resize(G, (-1, -1), fx=1/resize, fy=1/resize, interpolation=cv2.INTER_NEAREST)
+    # overlapMask = cv2.resize(overlapMask, (-1, -1), fx=1/resize, fy=1/resize, interpolation=cv2.INTER_NEAREST)
     return G, overlapMask
 
 

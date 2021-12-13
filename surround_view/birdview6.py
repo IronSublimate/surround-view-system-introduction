@@ -5,8 +5,8 @@ from PIL import Image
 from PyQt5.QtCore import QMutex, QWaitCondition, QMutexLocker
 from .base_thread import BaseThread
 from .imagebuffer import Buffer
-from . import param_settings as settings
-from .param_settings import xl, xr, yt, yb
+from . import param_settings6 as settings
+
 from . import utils
 from typing import Tuple, List
 
@@ -67,56 +67,56 @@ class ProjectedImageBuffer(object):
         return device_id in self.sync_devices
 
     def __str__(self):
-        return (self.__class__.__name__ + ":\n" + \
+        return (self.__class__.__name__ + ":\n" +
                 "devices: {}\n".format(self.sync_devices))
 
 
-def FI(front_image):
-    return front_image[:, :xl]
-
-
-def FII(front_image):
-    return front_image[:, xr:]
-
-
-def FM(front_image):
-    return front_image[:, xl:xr]
-
-
-def BIII(back_image):
-    return back_image[:, :xl]
-
-
-def BIV(back_image):
-    return back_image[:, xr:]
-
-
-def BM(back_image):
-    return back_image[:, xl:xr]
-
-
-def LI(left_image):
-    return left_image[:yt, :]
-
-
-def LIII(left_image):
-    return left_image[yb:, :]
-
-
-def LM(left_image):
-    return left_image[yt:yb, :]
-
-
-def RII(right_image):
-    return right_image[:yt, :]
-
-
-def RIV(right_image):
-    return right_image[yb:, :]
-
-
-def RM(right_image):
-    return right_image[yt:yb, :]
+# def FI(front_image):
+#     return front_image[:, :xl]
+#
+#
+# def FII(front_image):
+#     return front_image[:, xr:]
+#
+#
+# def FM(front_image):
+#     return front_image[:, xl:xr]
+#
+#
+# def BIII(back_image):
+#     return back_image[:, :xl]
+#
+#
+# def BIV(back_image):
+#     return back_image[:, xr:]
+#
+#
+# def BM(back_image):
+#     return back_image[:, xl:xr]
+#
+#
+# def LI(left_image):
+#     return left_image[:yt, :]
+#
+#
+# def LIII(left_image):
+#     return left_image[yb:, :]
+#
+#
+# def LM(left_image):
+#     return left_image[yt:yb, :]
+#
+#
+# def RII(right_image):
+#     return right_image[:yt, :]
+#
+#
+# def RIV(right_image):
+#     return right_image[yb:, :]
+#
+#
+# def RM(right_image):
+#     return right_image[yt:yb, :]
 
 
 class BirdView6(BaseThread):
@@ -130,7 +130,8 @@ class BirdView6(BaseThread):
         self.proc_buffer_manager = proc_buffer_manager
         self.drop_if_full = drop_if_full
         self.buffer = Buffer(buffer_size)
-        self.image = np.zeros((settings.total_h, settings.total_w, 3), np.uint8)
+        self.image = np.zeros((int(settings.total[0] * settings.ratio), int(settings.total[1] * settings.ratio), 3),
+                              np.uint32)
         self.weights = None
         self.masks = None
         self.car_image = settings.car_image
@@ -157,52 +158,60 @@ class BirdView6(BaseThread):
         G = self.weights[k]
         return (imA * G + imB * (1 - G)).astype(np.uint8)
 
-    @property
-    def FL(self):
-        return self.image[:yt, :xl]
-
-    @property
-    def F(self):
-        return self.image[:yt, xl:xr]
-
-    @property
-    def FR(self):
-        return self.image[:yt, xr:]
-
-    @property
-    def BL(self):
-        return self.image[yb:, :xl]
-
-    @property
-    def B(self):
-        return self.image[yb:, xl:xr]
-
-    @property
-    def BR(self):
-        return self.image[yb:, xr:]
-
-    @property
-    def L(self):
-        return self.image[yt:yb, :xl]
-
-    @property
-    def R(self):
-        return self.image[yt:yb, xr:]
-
-    @property
-    def C(self):
-        return self.image[yt:yb, xl:xr]
+    # @property
+    # def FL(self):
+    #     return self.image[:yt, :xl]
+    #
+    # @property
+    # def F(self):
+    #     return self.image[:yt, xl:xr]
+    #
+    # @property
+    # def FR(self):
+    #     return self.image[:yt, xr:]
+    #
+    # @property
+    # def BL(self):
+    #     return self.image[yb:, :xl]
+    #
+    # @property
+    # def B(self):
+    #     return self.image[yb:, xl:xr]
+    #
+    # @property
+    # def BR(self):
+    #     return self.image[yb:, xr:]
+    #
+    # @property
+    # def L(self):
+    #     return self.image[yt:yb, :xl]
+    #
+    # @property
+    # def R(self):
+    #     return self.image[yt:yb, xr:]
+    #
+    # @property
+    # def C(self):
+    #     return self.image[yt:yb, xl:xr]
 
     def stitch_all_parts(self):
-        front, back, left, right = self.frames
-        np.copyto(self.F, FM(front))
-        np.copyto(self.B, BM(back))
-        np.copyto(self.L, LM(left))
-        np.copyto(self.R, RM(right))
-        np.copyto(self.FL, self.merge(FI(front), LI(left), 0))
-        np.copyto(self.FR, self.merge(FII(front), RII(right), 1))
-        np.copyto(self.BL, self.merge(BIII(back), LIII(left), 2))
-        np.copyto(self.BR, self.merge(BIV(back), RIV(right), 3))
+        # front, back, left, right = self.frames
+        # np.copyto(self.F, FM(front))
+        # np.copyto(self.B, BM(back))
+        # np.copyto(self.L, LM(left))
+        # np.copyto(self.R, RM(right))
+        # np.copyto(self.FL, self.merge(FI(front), LI(left), 0))
+        # np.copyto(self.FR, self.merge(FII(front), RII(right), 1))
+        # np.copyto(self.BL, self.merge(BIII(back), LIII(left), 2))
+        # np.copyto(self.BR, self.merge(BIV(back), RIV(right), 3))
+        # sz = len(self.frames)
+        # for i in range(sz):
+        #     j = (i + 1) % sz
+        self.image = self.image.astype(np.float32)
+        for img, mask in zip(self.frames, self.weights):
+            self.image += (img * mask).astype(np.float32)
+        self.image = self.image.astype(np.uint8)
+        return self
 
     def copy_car_image(self):
         np.copyto(self.C, self.car_image)

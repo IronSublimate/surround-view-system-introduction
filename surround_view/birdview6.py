@@ -310,8 +310,7 @@ class BirdView6(BaseThread):
         sz = len(images)
         Gs = [np.ndarray((0,))] * sz
         Ms = [np.ndarray((0,))] * sz
-        Gs_temp = [np.ndarray((0,))] * sz  # temperately weight of i and i+1
-        Ms_temp = [np.ndarray((0,))] * sz  # temperately mask of i and i+1
+
         for i in range(sz):
             j = (i + 1) % sz
             k = (i + sz - 1) % sz
@@ -319,11 +318,7 @@ class BirdView6(BaseThread):
             G2, M2 = utils.get_weight_mask_matrix(images[i], images[k])
             Gs[i] = G1 * G2
             Ms[i] = cv2.bitwise_and(M1, M2)
-        # The weight and mask of i is multiple weight and mask of i-1 and i+1
-        # for i in range(sz):
-        #     k = (i + sz - 1) % sz
-        #     Gs[i] = Gs_temp[i]*Gs_temp[k]
-        #     Ms[i] = cv2.bitwise_and(Ms_temp[i],Ms_temp[k])
+
         self.weights = [np.stack((G, G, G), axis=2) for G in Gs]
         self.masks = [(M / 255.0).astype(np.int) for M in Ms]
         return np.stack(Gs, axis=2), np.stack(Ms, axis=2)

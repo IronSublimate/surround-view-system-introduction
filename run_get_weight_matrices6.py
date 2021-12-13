@@ -32,8 +32,10 @@ def main():
     # birdview.copy_car_image()
     ret = display_image("BirdView Result", birdview.image)
     if ret > 0:
-        Image.fromarray((Gmat * 255).astype(np.uint8)).save("weights.png")
-        Image.fromarray(Mmat.astype(np.uint8)).save("masks.png")
+        np.save("Gmat.npy", Gmat)
+        np.save("Mmat.npy", Mmat)
+        # Image.fromarray((Gmat * 255).astype(np.uint8)).save("weights.png")
+        # Image.fromarray(Mmat.astype(np.uint8)).save("masks.png")
 
 
 if __name__ == "__main__":

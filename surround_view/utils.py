@@ -61,7 +61,7 @@ def get_mask(img):
     ret, mask = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)
     return mask
 
-
+DILATE_KERNEL = np.ones((5, 5), np.uint8)
 def get_overlap_region_mask(imA, imB):
     """
     Given two images of the save size, get their overlapping region and
@@ -69,7 +69,7 @@ def get_overlap_region_mask(imA, imB):
     """
     overlap = cv2.bitwise_and(imA, imB)
     mask = get_mask(overlap)
-    mask = cv2.dilate(mask, np.ones((2, 2), np.uint8), iterations=2)
+    mask = cv2.dilate(mask, DILATE_KERNEL, iterations=2)
     return mask
 
 
@@ -79,7 +79,7 @@ def get_outmost_polygon_boundary(img: np.ndarray) -> np.ndarray:
     two images, get the outmost contour of this region.
     """
     mask = get_mask(img)
-    mask = cv2.dilate(mask, np.ones((2, 2), np.uint8), iterations=2)
+    mask = cv2.dilate(mask, DILATE_KERNEL, iterations=2)
     cnts, hierarchy = cv2.findContours(
         mask,
         cv2.RETR_EXTERNAL,

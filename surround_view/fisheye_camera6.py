@@ -24,7 +24,7 @@ class FisheyeCameraModel6(object):
         self.undistort_maps = None
         self.project_matrix = None
         self.select_points = np.ndarray((0,), dtype=np.float32)
-        self.project_shape = (settings.total[0],settings.total[1])
+        self.project_shape = (settings.total[0], settings.total[1])
         self.load_camera_params()
 
     def load_camera_params(self):
@@ -80,7 +80,7 @@ class FisheyeCameraModel6(object):
         return result
 
     def project(self, image):
-        result = cv2.warpPerspective(image, self.project_matrix, self.project_shape)
+        result = cv2.warpPerspective(image, self.project_matrix, self.project_shape, flags=cv2.INTER_LINEAR)
         return result
 
     def flip(self, image):

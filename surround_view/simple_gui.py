@@ -65,6 +65,7 @@ class PointSelector(object):
                                                 self.image.shape)
             new_image = self.draw_mask_on_image(new_image, mask)
 
+        # cv2.namedWindow(self.title, cv2.WINDOW_NORMAL)
         cv2.imshow(self.title, new_image)
 
     def onclick(self, event, x, y, flags, param):
@@ -77,13 +78,13 @@ class PointSelector(object):
             self.keypoints.append((x, y))
             self.draw_image()
 
-    def loop(self):
+    def loop(self) -> bool:
         """
         Press "q" will exist the gui and return False
         press "d" will delete the last selected point.
         Press "Enter" will exist the gui and return True.
         """
-        cv2.namedWindow(self.title)
+        cv2.namedWindow(self.title, cv2.WINDOW_NORMAL)
         cv2.setMouseCallback(self.title, self.onclick, param=())
         cv2.imshow(self.title, self.image)
 

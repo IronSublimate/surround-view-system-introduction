@@ -6,7 +6,7 @@ camera_names = ["1", "2", "3", "4", "5", "6"]
 # Units cm
 import numpy as np
 
-total = np.array((20000, 20000), dtype=np.int)
+total = np.array((20000, 20000), dtype=np.int32)
 
 # project_shapes = {
 #     "front": (total_w, yt),
@@ -19,36 +19,34 @@ total = np.array((20000, 20000), dtype=np.int)
 # pixel locations of the four points to be chosen.
 # you must click these pixels in the same order when running
 # the get_projection_map.py script
+theta = 3 * np.pi / 180 # 3
+rotate_mat = np.array([[np.cos(theta), -np.sin(theta)],
+                       [np.sin(theta), np.cos(theta)]])
 project_keypoints = {
-    "1": [np.array((-2870, +5200), dtype=np.int) + total // 2,
-          np.array((+3070, +5200), dtype=np.int) + total // 2,
-          np.array((-2870, +2700), dtype=np.int) + total // 2,
-          np.array((+3070, +2700), dtype=np.int) + total // 2, ],
-
-    "2": [np.array((+3070, +5200), dtype=np.int) + total // 2,
-          np.array((+7250, +5200), dtype=np.int) + total // 2,
-          np.array((+3070, +2700), dtype=np.int) + total // 2,
-          np.array((+7250, +2700), dtype=np.int) + total // 2, ],
-
-    "3": [np.array((+3070, -4800), dtype=np.int) + total // 2,
-          np.array((+7250, -4800), dtype=np.int) + total // 2,
-          np.array((+3070, -7300), dtype=np.int) + total // 2,
-          np.array((+7250, -7300), dtype=np.int) + total // 2, ],
-
-    "4": [np.array((-2870, -4800), dtype=np.int) + total // 2,
-          np.array((+3070, -4800), dtype=np.int) + total // 2,
-          np.array((-2870, -7300), dtype=np.int) + total // 2,
-          np.array((+3070, -7300), dtype=np.int) + total // 2, ],
-
-    "5": [np.array((-8250, -4800), dtype=np.int) + total // 2,
-          np.array((-2870, -4800), dtype=np.int) + total // 2,
-          np.array((-8250, -7300), dtype=np.int) + total // 2,
-          np.array((-2870, -7300), dtype=np.int) + total // 2, ],
-
-    "6": [np.array((-8250, +5200), dtype=np.int) + total // 2,
-          np.array((-2870, +5200), dtype=np.int) + total // 2,
-          np.array((-8250, +2700), dtype=np.int) + total // 2,
-          np.array((-2870, +2700), dtype=np.int) + total // 2, ],
+    "1": [(np.array((-2870, +5200 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((+3070, +5200 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((-2870, +2700 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((+3070, +2700 + 0000)) + total / 2) @ rotate_mat, ],
+    "2": [(np.array((+3070, +5200 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((+7250, +5200 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((+3070, +2700 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((+7250, +2700 + 0000)) + total / 2) @ rotate_mat, ],
+    "3": [(np.array((+3070, -4800 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((+7250, -4800 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((+3070, -7300 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((+7250, -7300 + 0000)) + total / 2) @ rotate_mat, ],
+    "4": [(np.array((-2870, -4800 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((+3070, -4800 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((-2870, -7300 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((+3070, -7300 + 0000)) + total / 2) @ rotate_mat, ],
+    "5": [(np.array((-8250, -4800 + 2500)) + total / 2) @ rotate_mat,
+          (np.array((-2870, -4800 + 2500)) + total / 2) @ rotate_mat,
+          (np.array((-8250, -7300 + 2500)) + total / 2) @ rotate_mat,
+          (np.array((-2870, -7300 + 2500)) + total / 2) @ rotate_mat, ],
+    "6": [(np.array((-8250, +5200 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((-2870, +5200 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((-8250, +2700 + 0000)) + total / 2) @ rotate_mat,
+          (np.array((-2870, +2700 + 0000)) + total / 2) @ rotate_mat, ],
 }
 ratio = 0.05
 

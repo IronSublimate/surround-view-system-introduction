@@ -23,6 +23,7 @@ class FisheyeCameraModel6(object):
         self.shift_xy = (0, 0)
         self.undistort_maps = None
         self.project_matrix = None
+        self.select_points = np.ndarray((0,), dtype=np.float32)
         self.project_shape = (settings.total[0],settings.total[1])
         self.load_camera_params()
 
@@ -31,6 +32,7 @@ class FisheyeCameraModel6(object):
         self.camera_matrix = fs.getNode("camera_matrix").mat()
         self.dist_coeffs = fs.getNode("dist_coeffs").mat()
         self.resolution = fs.getNode("resolution").mat().flatten()
+        self.select_points = fs.getNode("select_points").mat()
 
         scale_xy = fs.getNode("scale_xy").mat()
         if scale_xy is not None:
@@ -104,4 +106,5 @@ class FisheyeCameraModel6(object):
         fs.write("project_matrix", self.project_matrix)
         fs.write("scale_xy", np.float32(self.scale_xy))
         fs.write("shift_xy", np.float32(self.shift_xy))
+        fs.write("select_points", np.float32(self.select_points))
         fs.release()

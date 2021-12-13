@@ -18,9 +18,13 @@ def get_projection_map(camera_model: FisheyeCameraModel6, image: np.ndarray):
     dst_points = settings.project_keypoints[name]
     choice = gui.loop()
     if choice > 0:
-        src = np.float32(gui.keypoints)
+        if len(gui.keypoints) == 0:
+            src = camera_model.select_points
+        else:
+            src = np.float32(gui.keypoints)
         dst = np.float32(dst_points)
         camera_model.project_matrix = cv2.getPerspectiveTransform(src, dst)
+        camera_model.select_points = src
         proj_image = camera_model.project(und_image)
 
         ret = display_image("Bird's View", proj_image)
@@ -57,7 +61,7 @@ def main():
     camera_file = os.path.join(os.getcwd(), "yaml", camera_name + ".yaml")
     image_file = os.path.join(os.getcwd(), "images", camera_name + ".png")
     image = cv2.imread(image_file)
-    image[:image.shape[0] // 2, :, :] = 0  # 去掉天上的部分
+    image[:image.shape[0]*9 // 16, :, :] = 0  # 去掉天上的部分
     camera = FisheyeCameraModel6(camera_file, camera_name)
     camera.set_scale_and_shift(scale, shift)
     success = get_projection_map(camera, image)

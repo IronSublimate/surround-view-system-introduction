@@ -6,7 +6,7 @@ camera_names = ["1", "2", "3", "4", "5", "6"]
 # Units cm
 import numpy as np
 
-total = np.array((20000, 20000), dtype=np.int32)
+total = np.array((2000, 2000), dtype=np.int32)
 
 # project_shapes = {
 #     "front": (total_w, yt),
@@ -23,32 +23,32 @@ theta = 3 * np.pi / 180 # 3
 rotate_mat = np.array([[np.cos(theta), -np.sin(theta)],
                        [np.sin(theta), np.cos(theta)]])
 project_keypoints = {
-    "1": [(np.array((-2870, +5200 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((+3070, +5200 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((-2870, +2700 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((+3070, +2700 + 0000)) + total / 2) @ rotate_mat, ],
-    "2": [(np.array((+3070, +5200 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((+7250, +5200 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((+3070, +2700 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((+7250, +2700 + 0000)) + total / 2) @ rotate_mat, ],
-    "3": [(np.array((+3070, -4800 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((+7250, -4800 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((+3070, -7300 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((+7250, -7300 + 0000)) + total / 2) @ rotate_mat, ],
-    "4": [(np.array((-2870, -4800 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((+3070, -4800 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((-2870, -7300 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((+3070, -7300 + 0000)) + total / 2) @ rotate_mat, ],
-    "5": [(np.array((-8250, -4800 + 2500)) + total / 2) @ rotate_mat,
-          (np.array((-2870, -4800 + 2500)) + total / 2) @ rotate_mat,
-          (np.array((-8250, -7300 + 2500)) + total / 2) @ rotate_mat,
-          (np.array((-2870, -7300 + 2500)) + total / 2) @ rotate_mat, ],
-    "6": [(np.array((-8250, +5200 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((-2870, +5200 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((-8250, +2700 + 0000)) + total / 2) @ rotate_mat,
-          (np.array((-2870, +2700 + 0000)) + total / 2) @ rotate_mat, ],
+    "1": [(np.array((-287, +520 + 000)) + total / 2) @ rotate_mat,
+          (np.array((+307, +520 + 000)) + total / 2) @ rotate_mat,
+          (np.array((-287, +270 + 000)) + total / 2) @ rotate_mat,
+          (np.array((+307, +270 + 000)) + total / 2) @ rotate_mat, ],
+    "2": [(np.array((+307, +520 + 000)) + total / 2) @ rotate_mat,
+          (np.array((+725, +520 + 000)) + total / 2) @ rotate_mat,
+          (np.array((+307, +270 + 000)) + total / 2) @ rotate_mat,
+          (np.array((+725, +270 + 000)) + total / 2) @ rotate_mat, ],
+    "3": [(np.array((+307, -480 + 000)) + total / 2) @ rotate_mat,
+          (np.array((+725, -480 + 000)) + total / 2) @ rotate_mat,
+          (np.array((+307, -730 + 000)) + total / 2) @ rotate_mat,
+          (np.array((+725, -730 + 000)) + total / 2) @ rotate_mat, ],
+    "4": [(np.array((-287, -480 + 000)) + total / 2) @ rotate_mat,
+          (np.array((+307, -480 + 000)) + total / 2) @ rotate_mat,
+          (np.array((-287, -730 + 000)) + total / 2) @ rotate_mat,
+          (np.array((+307, -730 + 000)) + total / 2) @ rotate_mat, ],
+    "5": [(np.array((-825, -480 + 250)) + total / 2) @ rotate_mat,
+          (np.array((-287, -480 + 250)) + total / 2) @ rotate_mat,
+          (np.array((-825, -730 + 250)) + total / 2) @ rotate_mat,
+          (np.array((-287, -730 + 250)) + total / 2) @ rotate_mat, ],
+    "6": [(np.array((-825, +520 + 000)) + total / 2) @ rotate_mat,
+          (np.array((-287, +520 + 000)) + total / 2) @ rotate_mat,
+          (np.array((-825, +270 + 000)) + total / 2) @ rotate_mat,
+          (np.array((-287, +270 + 000)) + total / 2) @ rotate_mat, ],
 }
-ratio = 0.05
+ratio = 0.5
 
 car_image = cv2.imread(os.path.join(os.getcwd(), "images", "car.png"))
 # car_image = cv2.resize(car_image, (xr - xl, yb - yt))

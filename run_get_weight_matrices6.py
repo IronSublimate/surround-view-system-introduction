@@ -32,8 +32,14 @@ def main():
     # birdview.copy_car_image()
     ret = display_image("BirdView Result", birdview.image)
     if ret > 0:
-        np.save("Gmat.npy", Gmat)
-        np.save("Mmat.npy", Mmat)
+        fg = cv2.FileStorage(os.path.join(os.getcwd(), "yaml/projection.yml"), cv2.FileStorage_WRITE)
+        fg.write("size", settings.total)
+        fg.write("Gmat", Gmat)
+        fg.write("Mmat", Mmat)
+        fg.release()
+        # np.save("Gmat.npy", Gmat)
+        # np.save("Mmat.npy", Mmat)
+
         # Image.fromarray((Gmat * 255).astype(np.uint8)).save("weights.png")
         # Image.fromarray(Mmat.astype(np.uint8)).save("masks.png")
 

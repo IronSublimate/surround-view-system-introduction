@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from numpy import ndarray
 
 
 def gstreamer_pipeline(cam_id=0,
@@ -41,7 +42,7 @@ def adjust_luminance(gray, factor):
     return np.minimum((gray * factor), 255).astype(np.uint8)
 
 
-def get_mean_statistisc(gray, mask):
+def get_mean_statistisc(gray, mask) -> ndarray:
     """
     Get the total values of a gray image in a region defined by a mask matrix.
     The mask matrix must have values either 0 or 1.
@@ -49,7 +50,7 @@ def get_mean_statistisc(gray, mask):
     return np.sum(gray * mask)
 
 
-def mean_luminance_ratio(grayA, grayB, mask):
+def mean_luminance_ratio(grayA, grayB, mask) -> np.float64:
     return get_mean_statistisc(grayA, mask) / get_mean_statistisc(grayB, mask)
 
 
@@ -61,7 +62,10 @@ def get_mask(img):
     ret, mask = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)
     return mask
 
+
 DILATE_KERNEL = np.ones((5, 5), np.uint8)
+
+
 def get_overlap_region_mask(imA, imB):
     """
     Given two images of the save size, get their overlapping region and
@@ -97,13 +101,14 @@ def get_outmost_polygon_boundary(img: np.ndarray) -> np.ndarray:
     return polygon.reshape((-1, 2))
 
 
-def get_weight_mask_matrix(imA: np.ndarray, imB: np.ndarray, dist_threshold=5, resize=0.025) -> (np.ndarray, np.ndarray):
+def get_weight_mask_matrix(imA: np.ndarray, imB: np.ndarray, dist_threshold=5, resize=0.025) -> (
+np.ndarray, np.ndarray):
     """
     Get the weight matrix G that combines two images imA, imB smoothly.
     """
     # imA = cv2.resize(imA, (-1, -1), fx=resize, fy=resize, interpolation=cv2.INTER_NEAREST)
     # imB = cv2.resize(imB, (-1, -1), fx=resize, fy=resize, interpolation=cv2.INTER_NEAREST)
-    overlapMask = get_overlap_region_mask(imA,imB)
+    overlapMask = get_overlap_region_mask(imA, imB)
     overlapMaskInv = cv2.bitwise_not(overlapMask)
     indices = np.where(overlapMask == 255)
 

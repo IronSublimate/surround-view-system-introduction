@@ -25,10 +25,11 @@ def main():
 
     birdview = BirdView6()
     Gmat, Mmat = birdview.get_weights_and_masks(projected)
-    birdview.update_frames(projected)
-    # birdview.make_luminance_balance()
-    birdview.stitch_all_parts()
-    # birdview.make_white_balance()
+    birdview\
+        .update_frames(projected)\
+        .make_luminance_balance()\
+        .stitch_all_parts()\
+        .make_white_balance()
     # birdview.copy_car_image()
     ret = display_image("BirdView Result", birdview.image)
     if ret > 0:

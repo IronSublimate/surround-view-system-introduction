@@ -142,6 +142,7 @@ class BirdView6(BaseThread):
 
     def update_frames(self, images):
         self.frames: List[np.ndarray] = images
+        return self
 
     def load_weights_and_masks(self, weights_image, masks_image):
         GMat = np.asarray(Image.open(weights_image).convert("RGBA"), dtype=np.float) / 255.0
@@ -152,7 +153,7 @@ class BirdView6(BaseThread):
 
         Mmat = np.asarray(Image.open(masks_image).convert("RGBA"), dtype=np.float)
         Mmat = utils.convert_binary_to_bool(Mmat)
-        self.masks = [Mmat[:, :, k] for k in range(4)]
+        self.masks = [Mmat[:, :, k] for k in range(6)]
 
     def merge(self, imA, imB, k):
         G = self.weights[k]
@@ -224,85 +225,42 @@ class BirdView6(BaseThread):
             else:
                 return x * np.exp((1 - x) * 0.8)
 
-        front, back, left, right = self.frames
-        m1, m2, m3, m4 = self.masks
-        Fb, Fg, Fr = cv2.split(front)
-        Bb, Bg, Br = cv2.split(back)
-        Lb, Lg, Lr = cv2.split(left)
-        Rb, Rg, Rr = cv2.split(right)
+        sz = len(self.frames)
+        Gs = [np.ndarray((0,))] * sz
+        Ms = [np.ndarray((0,))] * sz
+        bgr_split = [(np.ndarray((0,)),)] * sz
+        for i in range(sz):
+            bgr_split[i] = cv2.split(self.frames[i])
 
-        a1 = utils.mean_luminance_ratio(RII(Rb), FII(Fb), m2)
-        a2 = utils.mean_luminance_ratio(RII(Rg), FII(Fg), m2)
-        a3 = utils.mean_luminance_ratio(RII(Rr), FII(Fr), m2)
+        luminance_ratio = np.zeros((sz, 3))  # 3 channel bgr
+        for i in range(sz):
+            j = (i + 1) % sz
+            k = (i + sz - 1) % sz
+            for m in range(3):
+                luminance_ratio[i, m] = \
+                    utils.mean_luminance_ratio(bgr_split[i][m], bgr_split[j][m], self.masks[i])
 
-        b1 = utils.mean_luminance_ratio(BIV(Bb), RIV(Rb), m4)
-        b2 = utils.mean_luminance_ratio(BIV(Bg), RIV(Rg), m4)
-        b3 = utils.mean_luminance_ratio(BIV(Br), RIV(Rr), m4)
+        t = [1.0, 1.0, 1.0]
+        for m in range(3):
+            for i in range(sz):
+                t[m] *= luminance_ratio[i, m]
+            t[m] = t[m] ** (1 / sz)
 
-        c1 = utils.mean_luminance_ratio(LIII(Lb), BIII(Bb), m3)
-        c2 = utils.mean_luminance_ratio(LIII(Lg), BIII(Bg), m3)
-        c3 = utils.mean_luminance_ratio(LIII(Lr), BIII(Br), m3)
+        for i in range(sz):
+            j = (i + 1) % sz
+            k = (i + sz - 1) % sz
+            x = [
+                tune(t[0] / (luminance_ratio[k, 0] / luminance_ratio[j, 0]) ** 0.5),
+                tune(t[1] / (luminance_ratio[k, 1] / luminance_ratio[j, 1]) ** 0.5),
+                tune(t[2] / (luminance_ratio[k, 2] / luminance_ratio[j, 2]) ** 0.5)
+            ]
+            img_bgr = [
+                utils.adjust_luminance(bgr_split[i][0], x[0]),
+                utils.adjust_luminance(bgr_split[i][1], x[1]),
+                utils.adjust_luminance(bgr_split[i][2], x[2]),
+            ]
+            self.frames[i] = cv2.merge(img_bgr)
 
-        d1 = utils.mean_luminance_ratio(FI(Fb), LI(Lb), m1)
-        d2 = utils.mean_luminance_ratio(FI(Fg), LI(Lg), m1)
-        d3 = utils.mean_luminance_ratio(FI(Fr), LI(Lr), m1)
-
-        t1 = (a1 * b1 * c1 * d1) ** 0.25
-        t2 = (a2 * b2 * c2 * d2) ** 0.25
-        t3 = (a3 * b3 * c3 * d3) ** 0.25
-
-        x1 = t1 / (d1 / a1) ** 0.5
-        x2 = t2 / (d2 / a2) ** 0.5
-        x3 = t3 / (d3 / a3) ** 0.5
-
-        x1 = tune(x1)
-        x2 = tune(x2)
-        x3 = tune(x3)
-
-        Fb = utils.adjust_luminance(Fb, x1)
-        Fg = utils.adjust_luminance(Fg, x2)
-        Fr = utils.adjust_luminance(Fr, x3)
-
-        y1 = t1 / (b1 / c1) ** 0.5
-        y2 = t2 / (b2 / c2) ** 0.5
-        y3 = t3 / (b3 / c3) ** 0.5
-
-        y1 = tune(y1)
-        y2 = tune(y2)
-        y3 = tune(y3)
-
-        Bb = utils.adjust_luminance(Bb, y1)
-        Bg = utils.adjust_luminance(Bg, y2)
-        Br = utils.adjust_luminance(Br, y3)
-
-        z1 = t1 / (c1 / d1) ** 0.5
-        z2 = t2 / (c2 / d2) ** 0.5
-        z3 = t3 / (c3 / d3) ** 0.5
-
-        z1 = tune(z1)
-        z2 = tune(z2)
-        z3 = tune(z3)
-
-        Lb = utils.adjust_luminance(Lb, z1)
-        Lg = utils.adjust_luminance(Lg, z2)
-        Lr = utils.adjust_luminance(Lr, z3)
-
-        w1 = t1 / (a1 / b1) ** 0.5
-        w2 = t2 / (a2 / b2) ** 0.5
-        w3 = t3 / (a3 / b3) ** 0.5
-
-        w1 = tune(w1)
-        w2 = tune(w2)
-        w3 = tune(w3)
-
-        Rb = utils.adjust_luminance(Rb, w1)
-        Rg = utils.adjust_luminance(Rg, w2)
-        Rr = utils.adjust_luminance(Rr, w3)
-
-        self.frames = [cv2.merge((Fb, Fg, Fr)),
-                       cv2.merge((Bb, Bg, Br)),
-                       cv2.merge((Lb, Lg, Lr)),
-                       cv2.merge((Rb, Rg, Rr))]
         return self
 
     def get_weights_and_masks(self, images: List[np.ndarray]):
@@ -317,7 +275,8 @@ class BirdView6(BaseThread):
             G1, M1 = utils.get_weight_mask_matrix(images[i], images[j])
             G2, M2 = utils.get_weight_mask_matrix(images[i], images[k])
             Gs[i] = G1 * G2
-            Ms[i] = cv2.bitwise_and(M1, M2)
+            Ms[i] = M1
+            # Ms[i] = cv2.bitwise_and(M1, M2)
 
         self.weights = [np.stack((G, G, G), axis=2) for G in Gs]
         self.masks = [(M / 255.0).astype(np.int) for M in Ms]
